@@ -202,15 +202,18 @@ export default class GameLogic {
       //checks for a collision
       //if spdmod is 0 it means that it is a shell or mine and should be destroyed
       //couldn't figure out how to delete is so I settled for teleporting it very far away for now
-      if(CollisionSystem.isCollidingCarCar(this.#car, other.car)){
-        CollisionSystem.applycollision(this.#car, other.car)
-        if(other.car.spdmod ==0){
-          other.car.x += 999999999999
-          other.car.currentSpeed = 0
-          other.car.length = 0
-          other.car.width = 0
-        }
-      }
+
+      //following code is commented out until collision detector is fixed:
+      // if(CollisionSystem.isCollidingCarCar(this.#car, other.car)){
+      //   console.log("collided probs")
+      //   CollisionSystem.applycollision(this.#car, other.car)
+      //   if(other.car.spdmod ==0){
+      //     other.car.x += 999999999999
+      //     other.car.currentSpeed = 0
+      //     other.car.length = 0
+      //     other.car.width = 0
+      //   }
+      // }
     }
   }
 
