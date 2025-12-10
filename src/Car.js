@@ -26,7 +26,7 @@ export default class ItalianCar {
   width = 30;
   length = 120;
   #coins; //def the speedboost
-  #spdmod = 1
+  #spdmod = 0.9
   constructor(color, type, initialX = 0, initialY = 0, initialTheta = 0) {
     this.#color = color;
     if (!KART_PRESETS[type]) {

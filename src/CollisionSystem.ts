@@ -7,8 +7,8 @@ import ItalianCar from "./Car"
 export class CollisionSystem {
     //simplest
     static isCollidingCarCar(car1: ItalianCar, car2: ItalianCar): boolean {
-        let dx = car1.x - (car2.x / 2);
-        let dy = car1.y - (car2.y / 2);
+        let dx = (car1.x+(car1.width)/2)-(car2.x+(car2.width)/2);
+        let dy = (car1.y+(car1.length)/2)-(car2.y+(car2.length)/2);
         return (Math.abs(dx) < (car1.width)) && (Math.abs(dy) < (car1.length));
     }
     
@@ -44,6 +44,18 @@ export class CollisionSystem {
         mine.omega=0
         mine.spdmod=0
         return mine
+    }
+
+
+
+    //applys the collision by swapping angles and speeds
+    static applycollision(obj1:ItalianCar, obj2:ItalianCar){
+        let tempspd = obj1.currentSpeed
+        let temptheta = obj1.theta
+        obj1.currentSpeed = obj2.currentSpeed*obj2.spdmod
+        obj1.theta=obj2.theta
+        obj2.currentSpeed = tempspd*obj1.spdmod
+        obj2.theta = obj2.theta
     }
 //Dependign on boundaries of track, we can have function here to check car track collision
 
