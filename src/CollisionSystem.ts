@@ -21,6 +21,13 @@ export class CollisionSystem {
         let dy = car.y - (object.y / 2);
         return (Math.abs(dx) < (car.width)) && (Math.abs(dy) < (car.length));
     }
+
+    static newshell(thrower:ItalianCar){
+        let shell = thrower
+        shell.maxSpeed = 2*thrower.maxSpeed
+        shell.currentSpeed = thrower.currentSpeed + thrower.maxSpeed
+
+    }
 //Dependign on boundaries of track, we can have function here to check car track collision
 
 }   

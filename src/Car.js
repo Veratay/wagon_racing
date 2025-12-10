@@ -68,6 +68,9 @@ export default class ItalianCar {
   get maxSpeed() {
     return this.#maxSpeed;
   }
+  set maxSpeed(spd){
+    this.#maxSpeed = spd
+  }
   get currentSpeed() {
     return this.#currentSpeed;
   }
