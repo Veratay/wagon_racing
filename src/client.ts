@@ -1,5 +1,4 @@
 import ItalianCar from "./Car";
-
 let websocket: WebSocket | null = null;
 let connectionPromise: Promise<void> | null = null;
 
