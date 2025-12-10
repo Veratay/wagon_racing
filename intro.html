@@ -94,7 +94,7 @@
 
         </div>
         
-        <form class="options" action="/minesweeper/game">
+        <form class="options" action="/">
             
             <div class="option">
                 <span>Name</span>
@@ -102,7 +102,7 @@
             </div>
             <div class="option grid">
                 <span>Color</span>
-                <input id="color" type="color" value="#FF0000" />
+                <input id="color" name="color" type="color" value="#FF0000" />
             </div>
             
             <div class="option flex">
@@ -112,6 +112,10 @@
                 <label for="med">Medium</label>
                 <input name='difficulty' id='hard' type="radio" value="hard"/>
                 <label for="hard">Heavy</label>
+            </div>
+            <div class="option grid">
+                <span>Room Code</span>
+                    <input name='gameid' id="gameid" placeholder=""/>
             </div>
             <button id="play" type="submit" >Play Game!</button>
         </form>
