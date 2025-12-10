@@ -45,6 +45,18 @@ export class CollisionSystem {
         mine.spdmod=0
         return mine
     }
+
+
+
+    //applys the collision by swapping angles and speeds
+    static applycollision(obj1:ItalianCar, obj2:ItalianCar){
+        let tempspd = obj1.currentSpeed
+        let temptheta = obj1.theta
+        obj1.currentSpeed = obj2.currentSpeed*obj2.spdmod
+        obj1.theta=obj2.theta
+        obj2.currentSpeed = tempspd*obj1.spdmod
+        obj2.theta = obj2.theta
+    }
 //Dependign on boundaries of track, we can have function here to check car track collision
 
 }   
