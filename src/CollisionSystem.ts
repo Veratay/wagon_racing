@@ -22,11 +22,28 @@ export class CollisionSystem {
         return (Math.abs(dx) < (car.width)) && (Math.abs(dy) < (car.length));
     }
 
+    //creates a projectile object 
     static newshell(thrower:ItalianCar){
         let shell = thrower
         shell.maxSpeed = 2*thrower.maxSpeed
         shell.currentSpeed = thrower.currentSpeed + thrower.maxSpeed
+        shell.Width = 10
+        shell.Length = 30
+        shell.omega=0
+        shell.spdmod=0
+        return shell
 
+    }
+    //creates a mine object
+    static newmine(user:ItalianCar){
+        let mine = user
+        mine.maxSpeed = 0
+        mine.currentSpeed = 0
+        mine.Width = 10
+        mine.Length = 30
+        mine.omega=0
+        mine.spdmod=0
+        return mine
     }
 //Dependign on boundaries of track, we can have function here to check car track collision
 
