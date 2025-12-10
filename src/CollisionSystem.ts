@@ -7,8 +7,8 @@ import ItalianCar from "./Car"
 export class CollisionSystem {
     //simplest
     static isCollidingCarCar(car1: ItalianCar, car2: ItalianCar): boolean {
-        let dx = car1.x - (car2.x / 2);
-        let dy = car1.y - (car2.y / 2);
+        let dx = (car1.x+(car1.width)/2)-(car2.x+(car2.width)/2);
+        let dy = (car1.y+(car1.length)/2)-(car2.y+(car2.length)/2);
         return (Math.abs(dx) < (car1.width)) && (Math.abs(dy) < (car1.length));
     }
     
