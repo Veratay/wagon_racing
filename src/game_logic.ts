@@ -20,7 +20,7 @@ import {
   onSocketMessage,
   clientGetRoad,
 } from "./client.js";
-
+import hexToRgb from "./color_convert.js";
 //some form or something to create cars based on user input before joining game
 
 const POS_DESYNC_THRESH = 5;
@@ -32,7 +32,6 @@ export default class GameLogic {
   #roadInstance: UnlitSolidInstance | undefined;
   #pid: string = "";
   #gid: string;
-
   #road: ProceduralRoad | undefined;
 
   #renderer: Renderer;
@@ -47,10 +46,10 @@ export default class GameLogic {
   #visual_substeps:number = 3;
   #step = 0;
 
-  constructor(canvas: HTMLCanvasElement, gid: string, clr: Vec3) {
+  constructor(canvas: HTMLCanvasElement, gid: string, color: string = "#915417", type: string = "medium") {
     this.#gid = gid;
-
-    this.#car = new ItalianCar("red", "medium");
+    
+    this.#car = new ItalianCar(color, type);
 
     this.#renderer = new Renderer({
       canvas,
@@ -88,7 +87,8 @@ export default class GameLogic {
     const carMesh = new Mesh(this.#renderer.gl, cubePositions, cubeIndices);
     this.#carClass = new UnlitSolidClass(this.#renderer.gl, carMesh);
     this.#carInstance = this.#carClass.createInstance();
-    this.#carInstance.color = new Vec3(1, 0, 0);
+    console.log(hexToRgb(color));
+    this.#carInstance.color = new Vec3(...Object.values(hexToRgb(color) || new Vec3(0,1,1)));
     this.#carInstance.scale = new Vec3(2, 1, 1);
 
     this.#renderer.addRenderClass(this.#carClass);
@@ -152,9 +152,10 @@ export default class GameLogic {
     let p = new Vec3(this.#car.position.x, this.#car.position.y, 0);
 
     if (this.#road && collideRoad(this.#road, p)) {
-      this.#carInstance.color = new Vec3(0, 1, 0);
+      // Car color def.
+      // this.#carInstance.color = new Vec3(0, 1, 0);
     } else {
-      this.#carInstance.color = new Vec3(1, 0, 0);
+      // this.#carInstance.color = new Vec3(1, 0, 0);
       // Reset car to start when it goes offroad
       this.#car.resetToInitialPosition();
     }
