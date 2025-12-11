@@ -42,9 +42,10 @@ const server = createServer(app);
 const wss = new WebSocketServer({ server });
 
 wss.on("connection", (ws) => {
+  //expects message from client.ts
   ws.on("message", (msg) => {
     const data = JSON.parse(msg.toString());
-
+    
     let gameid = data.gid;
     if (!games[gameid]) {
       console.error("invalid gameid");
@@ -88,7 +89,9 @@ let serverTick = 0;
 const tickRate = 60;
 const tickDt = 1.0 / tickRate;
 
+//isntead of sendign to everyone, let us only send those in the game
 function broadcastState() {
+  
   const snapshot = {
     type: "state",
     tick: serverTick++,
@@ -101,15 +104,26 @@ function broadcastState() {
         currentSpeed: data.car.currentSpeed,
         omega: data.car.omega,
       },
+      game: data.game,
     })),
   };
 
   const payload = JSON.stringify(snapshot);
 
-  for (const ws of wss.clients) {
-    if (ws.readyState === WebSocket.OPEN) ws.send(payload);
+
+for (const pid of Object.keys(clients)) {
+    const ws = clients[pid].ws;
+    if (ws && ws.readyState === WebSocket.OPEN) {
+      const CarsForGame = {
+        type: "state",
+        tick: serverTick,
+        cars: snapshot.cars.filter((c) => c.game === clients[pid].game),
+      };
+      ws.send(JSON.stringify(CarsForGame));
+    }
   }
-}
+  // ws.send(payload);
+  }
 
 const zeroInput = {
   up: false,
@@ -178,7 +192,8 @@ app.get("/api/road/controlpoints", function (req, res) {
  * player objects have their playerids, gameids, player number, and their car object
  */
 app.get("/api/start", function (req, res) {
-  let gid = req.query.gameid;
+  let gid = req.query.gameid?.trim();
+  if (!gid) return res.status(400).send("Missing or invalid gameid");
   let pid = uuidv4();
   let krt = req.query.kart;
   let clr = req.query.color;
@@ -199,7 +214,7 @@ app.get("/api/start", function (req, res) {
   //Checks if game exists and if it doesn't creates it
   if (!(gid in games)) {
     games[gid] = gm
-    roads[gid] = generateRoad();  
+    // roads[gid] = generateRoad();  
   }
   games[gid].Players.push(pid);
   pl.playernumber = games[gid].Players.length;
