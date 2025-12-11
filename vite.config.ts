@@ -4,7 +4,7 @@ export default defineConfig({
   server: {
     port: 3000,
     host: "0.0.0.0",
-    open: true,
+    open: "/intro.html",
     proxy: {
       '/api': 'http://0.0.0.0:4242'
     }
