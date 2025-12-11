@@ -6,6 +6,7 @@ export interface InputStates {
     down: boolean;
     left: boolean;
     right: boolean;
+    space: boolean;
 }
 //Input Processing
     /**
@@ -19,7 +20,8 @@ export const inputStates: InputStates = {
     up: false,
     down: false,
     left: false,
-    right: false
+    right: false,
+    space: false,
 }
 
 window.addEventListener('keydown', e => {
@@ -35,6 +37,9 @@ window.addEventListener('keydown', e => {
     if (e.key === 'ArrowRight') {
         inputStates.right = true;
     }
+    if (e.code === 'Space') {
+        inputStates.space = true;
+    }
 });
 
 window.addEventListener('keyup', e => {
@@ -49,6 +54,9 @@ window.addEventListener('keyup', e => {
     }
     if (e.key === 'ArrowRight') {
         inputStates.right = false;
+    }
+    if (e.code === 'Space') {
+        inputStates.space = false;
     }
 });
 

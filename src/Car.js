@@ -4,9 +4,9 @@
 
 //Const acceperation. Percent of
 const KART_PRESETS = {
-  light: { handling: 0.3, acceleration: 30, maxSpeed: 150, mass: 22 },
-  medium: { handling: 0.2, acceleration: 25, maxSpeed: 160, mass: 20 },
-  heavy: { handling: 0.1, acceleration: 23, maxSpeed: 190, mass: 32 },
+  light: { handling: 0.6, acceleration: 300*3, maxSpeed: 150, mass: 22*3 },
+  medium: { handling: 0.4, acceleration: 250*3, maxSpeed: 160, mass: 20*3 },
+  heavy: { handling: 0.2, acceleration: 230*3, maxSpeed: 190, mass: 32*3 },
 };
 
 export default class ItalianCar {
@@ -33,6 +33,14 @@ export default class ItalianCar {
   length = 2;
   #coins; //def the speedboost
   #spdmod = 0.9;
+
+  /**
+   * @param {string} color - Body color selected by the player.
+   * @param {string} type - Preset key determining handling stats.
+   * @param {number} [initialX=0] - Initial world X coordinate (m)
+   * @param {number} [initialY=0] - Initial world Y coordinate (m)
+   * @param {number} [initialTheta=0] - Initial heading angle (rad)
+   */
   constructor(color, type, initialX = 0, initialY = 0, initialTheta = 0) {
     this.#color = color;
     if (!KART_PRESETS[type]) {
@@ -60,6 +68,7 @@ export default class ItalianCar {
     this.initialTheta = initialTheta;
     //theta is in RADIANS!
   }
+
   get x() {
     return this.#x;
   }

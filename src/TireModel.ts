@@ -78,25 +78,15 @@ export default class TireModel {
     const b = this.#params[0];
     const c = this.#params[1];
     const d = this.#params[2];
-    const e = this.#params[3];
 
-    return (
-      this.#load *
-      d *
-      Math.sin(c * Math.atan(b * slip - e * (b * slip - Math.atan(b * slip))))
-    );
+    return this.#load * d * Math.sin(c * Math.atan(b * slip));
   }
 
   private slipToLatForce(slip: number) {
     const b = this.#latParams[0];
     const c = this.#latParams[1];
     const d = this.#latParams[2];
-    const e = this.#latParams[3];
 
-    return (
-      this.#load *
-      d *
-      Math.sin(c * Math.atan(b * slip - e * (b * slip - Math.atan(b * slip))))
-    );
+    return this.#load * d * Math.sin(c * Math.atan(b * slip));
   }
 }

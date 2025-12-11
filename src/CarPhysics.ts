@@ -4,13 +4,13 @@ import TireModel from "./TireModel";
 import { Vec3 } from "./math";
 
 const GRAVITY = 9.81;
-const DEFAULT_TIRE_PARAMS = [500, 1.0, 1.0, 1.0];
-const LATERAL_TIRE_PARAMS = [250, 1.0, 0.8, 1.0];
-const MAX_STEER_ANGLE = Math.PI / 4;
-const STEER_RETURN_RATE = 10;
+const DEFAULT_TIRE_PARAMS = [1, 1, 2.0, 200.0];
+const LATERAL_TIRE_PARAMS = [0.5, 1.0, 4.0, 1.0];
+const MAX_STEER_ANGLE = Math.PI / 6;
 const WHEEL_RADIUS = 0.35;
 const ANGULAR_DAMPING = 4;
-const LATERAL_VELOCITY_DAMP = 6;
+const WHEEL_INERTIA = 0.05;
+const STEER_RETURN_RATE = 10;
 
 type WheelConfig = {
   tire: TireModel;
@@ -24,6 +24,11 @@ const clamp = (value: number, min: number, max: number) =>
 export default class CarPhysics {
   static #wheelCache: WeakMap<ItalianCar, WheelConfig[]> = new WeakMap();
 
+  /*
+  * Runs a step of the car's physics model
+  * @param car {ItalianCar} The car to update
+  * @param input 
+  */
   static update(car: ItalianCar, input: InputStates, dt: number) {
     this.ensureVelocity(car);
     this.applySteering(car, input, dt);
@@ -32,7 +37,7 @@ export default class CarPhysics {
     const carVel = new Vec3(car.velocityX ?? 0, car.velocityY ?? 0, 0);
     const wheelForces = this.computeWheelForces(car, carVel);
 
-    this.integrate(car, wheelForces, dt);
+    this.integrate(car, wheelForces, input, dt);
 
     return this.predictNextPosition(car, dt);
   }
@@ -68,7 +73,7 @@ export default class CarPhysics {
     //   const magnitude = Math.max(0, Math.abs(steer) - STEER_RETURN_RATE * dt);
     //   steer = magnitude * sign;
     // }
-
+    //
     // car.frontWheelAngle = clamp(steer, -MAX_STEER_ANGLE, MAX_STEER_ANGLE);
 
     car.frontWheelAngle = 0;
@@ -92,21 +97,20 @@ export default class CarPhysics {
       car.frontWheelAngularVelocity += wheelAccel;
       car.rearWheelAngularVelocity += wheelAccel;
     } else if (input.down && !input.up) {
-      car.frontWheelAngularVelocity -= wheelAccel;
-      car.rearWheelAngularVelocity -= wheelAccel;
-    } else {
-      const decay = Math.exp(-STEER_RETURN_RATE * dt);
-      car.frontWheelAngularVelocity *= decay;
-      car.rearWheelAngularVelocity *= decay;
+      car.frontWheelAngularVelocity -= wheelAccel*10;
+      car.rearWheelAngularVelocity -= wheelAccel*10;
     }
 
+    car.frontWheelAngularVelocity *= (1-0.05*dt)
+    car.rearWheelAngularVelocity *= (1-0.05*dt)
+
     car.frontWheelAngularVelocity = clamp(
-      car.frontWheelAngularVelocity ?? 0,
+      car.frontWheelAngularVelocity,
       0,
       maxWheelSpeed,
     );
     car.rearWheelAngularVelocity = clamp(
-      car.rearWheelAngularVelocity ?? 0,
+      car.rearWheelAngularVelocity,
       0,
       maxWheelSpeed,
     );
@@ -117,24 +121,30 @@ export default class CarPhysics {
     wheelForces: {
       totalForce: { x: number; y: number };
       totalTorque: number;
+      frontWheelLongitudinalForce: number;
+      rearWheelLongitudinalForce: number;
     },
+    input: InputStates,
     dt: number,
   ) {
     const ax = wheelForces.totalForce.x / car.mass;
     const ay = wheelForces.totalForce.y / car.mass;
 
-    car.velocityX = (car.velocityX ?? 0) + ax * dt;
-    car.velocityY = (car.velocityY ?? 0) + ay * dt;
-    const forwardX = Math.cos(car.theta);
-    const forwardY = Math.sin(car.theta);
-    const lateralX = -Math.sin(car.theta);
-    const lateralY = Math.cos(car.theta);
-    const forwardSpeed = car.velocityX * forwardX + car.velocityY * forwardY;
-    const lateralSpeed = car.velocityX * lateralX + car.velocityY * lateralY;
-    const dampedLateral = lateralSpeed * Math.exp(-LATERAL_VELOCITY_DAMP * dt);
-    car.velocityX = forwardSpeed * forwardX + dampedLateral * lateralX;
-    car.velocityY = forwardSpeed * forwardY + dampedLateral * lateralY;
+    car.velocityX = car.velocityX + ax * dt;
+    car.velocityY = car.velocityY + ay * dt;
     car.currentSpeed = Math.hypot(car.velocityX, car.velocityY);
+
+    const frontTorque =
+      (wheelForces.frontWheelLongitudinalForce * WHEEL_RADIUS) / WHEEL_INERTIA;
+    car.frontWheelAngularVelocity -= frontTorque * dt;
+
+    if (input.space) {
+      car.rearWheelAngularVelocity = 0;
+    } else {
+      const rearTorque =
+        (wheelForces.rearWheelLongitudinalForce * WHEEL_RADIUS) / WHEEL_INERTIA;
+      car.rearWheelAngularVelocity -= rearTorque * dt;
+    }
 
     const inertia =
       (car.mass * (car.length * car.length + car.width * car.width)) / 12;
@@ -185,10 +195,22 @@ export default class CarPhysics {
     return wheels;
   }
 
-  private static computeWheelForces(car: ItalianCar, carVel: Vec3) {
+  private static computeWheelForces(
+    car: ItalianCar,
+    carVel: Vec3,
+  ): {
+    totalForce: { x: number; y: number };
+    totalTorque: number;
+    frontWheelLongitudinalForce: number;
+    rearWheelLongitudinalForce: number;
+  } {
     const wheels = this.getWheels(car);
     const totalForce = { x: 0, y: 0 };
     let totalTorque = 0;
+    let frontWheelLongitudinalForce = 0;
+    let rearWheelLongitudinalForce = 0;
+    let frontWheelsCount = 0;
+    let rearWheelsCount = 0;
 
     const theta = car.theta;
     const omega = car.omega ?? 0;
@@ -212,13 +234,21 @@ export default class CarPhysics {
         omega,
       );
 
+      if (wheel.isFront) {
+        frontWheelLongitudinalForce += longitudinal;
+        frontWheelsCount++;
+      } else {
+        rearWheelLongitudinalForce += longitudinal;
+        rearWheelsCount++;
+      }
+
       const dirX = Math.cos(contactTheta);
       const dirY = Math.sin(contactTheta);
       const latDirX = -Math.sin(contactTheta);
       const latDirY = Math.cos(contactTheta);
 
-      const forceX = dirX * longitudinal + latDirX * lateral;
-      const forceY = dirY * longitudinal + latDirY * lateral;
+      const forceX = dirX * longitudinal + latDirX * lateral*2
+      const forceY = dirY * longitudinal + latDirY * lateral*2;
 
       totalForce.x += forceX;
       totalForce.y += forceY;
@@ -228,6 +258,11 @@ export default class CarPhysics {
       totalTorque += worldX * forceY - worldY * forceX;
     }
 
-    return { totalForce, totalTorque };
+    return {
+      totalForce,
+      totalTorque,
+      frontWheelLongitudinalForce: frontWheelLongitudinalForce / frontWheelsCount,
+      rearWheelLongitudinalForce: rearWheelLongitudinalForce / rearWheelsCount
+    };
   }
 }
