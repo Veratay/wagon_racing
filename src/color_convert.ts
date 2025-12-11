@@ -1,6 +1,6 @@
 
 // https://stackoverflow.com/questions/5623838/rgb-to-hex-and-hex-to-rgb
-//chagne to remove 
+//allows us to convert hex color codes to rgb values
 export default function hexToRgb(hex:string): {r: number, g: number, b: number} | null {
     let  cleanHex = decodeURIComponent(hex);
 

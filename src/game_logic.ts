@@ -49,7 +49,6 @@ export default class GameLogic {
 
   constructor(canvas: HTMLCanvasElement, gid: string, color: string = "#915417", type: string = "medium") {
     this.#gid = gid;
-    
     this.#car = new ItalianCar(color, type);
 
     this.#renderer = new Renderer({
@@ -135,11 +134,20 @@ export default class GameLogic {
   async start() {
     await this.loadRoad(this.#gid);
 
+    // double check everything loaded and works on client side
+    
+    this.#pid = (await clientStart(this.#gid, this.#car.type, this.#car.color)) as string;
+    //for whatev reason there is an error:
+    // if (this.#pid.error) {
+    //     alert(this.#pid.error);
+    //     window.location.href = "/intro.html";
+    //     return;
+    // }
     //game loop
     this.#renderer.onUpdate(this.loop.bind(this));
     this.#renderer.start();
 
-    this.#pid = (await clientStart(this.#gid, "medium", "red")) as string;
+    
 
     onSocketMessage(this.handleWebSocketMessage.bind(this));
   }

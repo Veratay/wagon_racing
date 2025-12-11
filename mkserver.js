@@ -186,6 +186,7 @@ app.get("/api/start", function (req, res) {
     track: null,
     Players: [],
     numPlayers: null,
+    status: "waiting",
   };
   let ncr = new ItalianCar(clr, krt);
   let pl = {
@@ -194,8 +195,11 @@ app.get("/api/start", function (req, res) {
     playernumber: null,
     car: ncr,
   };
+
+  //Checks if game exists and if it doesn't creates it
   if (!(gid in games)) {
-    games[gid] = gm;
+    games[gid] = gm
+    roads[gid] = generateRoad();  
   }
   games[gid].Players.push(pid);
   pl.playernumber = games[gid].Players.length;
@@ -205,9 +209,22 @@ app.get("/api/start", function (req, res) {
     playerid: `${pid}`,
   };
 
-  console.log(`player ${pid} started game ${gid}`);
+  const game = games[gid];
+  
+//Checks whether the game is in joinable status or not
+  if (game.status === "playing" || game.Players.length>=4) {
+    return res.status(403).send("Game is full or already started"); //sends message of error
+  }
+  if (game.Players.length === 4) {
+    console.log(`Room ${gid} is full. Starting game!`);
+      game.status = 'PLAYING';
+  }
+
   res.send(JSON.stringify(packet));
 });
+
+
+
 
 //sends player info as detailed in the apiin nodejs I want to use websockets to allow clients t
 app.get("/api/player", function (req, res) {

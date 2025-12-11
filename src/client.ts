@@ -70,7 +70,7 @@ export async function clientGetGame(gid: string) {
 //starts a new game and gives the client their playerid
 export async function clientStart(gid: string, krt: string, clr: any) {
   let player = await fetch(
-    `/api/start?gameid=${gid}&kart=${krt}&color=${clr}`,
+    `/api/start?gameid=${gid}&kart=${krt}&color=${encodeURIComponent(clr)}`,
   ).then(async function (resp) {
     const json = await resp.json();
     return json as { playerid: string };
