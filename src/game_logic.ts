@@ -20,7 +20,8 @@ import {
   onSocketMessage,
   clientGetRoad,
 } from "./client.js";
-import hexToRgb from "./color_convert.js";import { CollisionSystem } from "./CollisionSystem.js";
+import hexToRgb from "./color_convert.js";
+import { CollisionSystem } from "./CollisionSystem.js";
 
 //some form or something to create cars based on user input before joining game
 
@@ -44,12 +45,17 @@ export default class GameLogic {
   #cameraTargetPosition: Vec3 = new Vec3(0, 0, 0);
   #cameraTargetSmoothness: number = 100;
 
-  #visual_substeps:number = 3;
+  #visual_substeps: number = 3;
   #step = 0;
 
-  constructor(canvas: HTMLCanvasElement, gid: string, color: string = "#915417", type: string = "medium") {
+  constructor(
+    canvas: HTMLCanvasElement,
+    gid: string,
+    color: string = "#915417",
+    type: string = "medium",
+  ) {
     this.#gid = gid;
-    
+
     this.#car = new ItalianCar(color, type);
 
     this.#renderer = new Renderer({
@@ -89,7 +95,9 @@ export default class GameLogic {
     this.#carClass = new UnlitSolidClass(this.#renderer.gl, carMesh);
     this.#carInstance = this.#carClass.createInstance();
     console.log(hexToRgb(color));
-    this.#carInstance.color = new Vec3(...Object.values(hexToRgb(color) || new Vec3(0,1,1)));
+    this.#carInstance.color = new Vec3(
+      ...Object.values(hexToRgb(color) || new Vec3(0, 1, 1)),
+    );
     this.#carInstance.scale = new Vec3(2, 1, 1);
 
     this.#renderer.addRenderClass(this.#carClass);
@@ -185,18 +193,24 @@ export default class GameLogic {
       );
     }
 
-    if (this.#pid != "" && !this.#justResynced && this.#step % this.#visual_substeps==0)
+    if (
+      this.#pid != "" &&
+      !this.#justResynced &&
+      this.#step % this.#visual_substeps == 0
+    )
       clientSendCar(this.#gid, this.#pid, this.#car);
-    this.#step++
+    this.#step++;
 
     const blankInputs = { up: false, down: false, right: false, left: false };
+
+    console.log(this.#otherCars);
 
     for (let other of this.#otherCars.values()) {
       // console.log(other.car.position)
       // console.log(other.car.velocity)
       const nextP = CarPhysics.update(other.car, blankInputs, dt);
       CarPhysics.updatePosition(other.car, nextP);
-      
+
       other.instance.translation = new Vec3(other.car.x, other.car.y, 0.1);
 
       other.instance.rotation = new Vec3(0, 0, other.car.theta);
@@ -205,16 +219,10 @@ export default class GameLogic {
       //couldn't figure out how to delete is so I settled for teleporting it very far away for now
 
       //following code is commented out until collision detector is fixed:
-      // if(CollisionSystem.isCollidingCarCar(this.#car, other.car)){
-      //   console.log("collided probs")
-      //   CollisionSystem.applycollision(this.#car, other.car)
-      //   if(other.car.spdmod ==0){
-      //     other.car.x += 999999999999
-      //     other.car.currentSpeed = 0
-      //     other.car.length = 0
-      //     other.car.width = 0
-      //   }
-      // }
+      if (CollisionSystem.isCollidingCarCar(this.#car, other.car)) {
+        console.log("collided probs");
+        CollisionSystem.applycollision(this.#car, other.car);
+      }
     }
   }
 
@@ -257,7 +265,7 @@ export default class GameLogic {
             this.#car.currentSpeed = v.car.currentSpeed;
             this.#car.omega = v.car.omega;
             this.#justResynced = true;
-            console.log("resync")
+            console.log("resync");
           } else {
             this.#justResynced = false;
           }
@@ -266,11 +274,11 @@ export default class GameLogic {
 
       // remove disconnected cars from view
       for (let pid of this.#otherCars.keys()) {
-        if (!data.cars.find((v: { pid: string; }) => v.pid == pid)) {
-          let instance = this.#otherCars.get(pid)!.instance
+        if (!data.cars.find((v: { pid: string }) => v.pid == pid)) {
+          let instance = this.#otherCars.get(pid)!.instance;
 
-          this.#carClass.removeInstance(instance)
-          this.#otherCars.delete(pid)
+          this.#carClass.removeInstance(instance);
+          this.#otherCars.delete(pid);
         }
       }
     }
