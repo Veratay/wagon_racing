@@ -25,7 +25,7 @@ export default class ItalianCar {
   initialTheta;
   width = 1;
   length = 2;
-  #coins; //def the speedboost
+  // #coins; //def the speedboost
   #spdmod = 0.9
   constructor(color, type, initialX = 0, initialY = 0, initialTheta = 0) {
     this.#color = color;
@@ -41,7 +41,7 @@ export default class ItalianCar {
     this.#x = initialX; // Initial X position
     this.#y = initialY; // Initial Y position
     this.#omega = 0; // initial angular velocity
-    this.#coins = 0;
+    // this.#coins = 0;
     this.#theta = initialTheta; // initial direction angle
     this.initialX = initialX;
     this.initialY = initialY;
@@ -93,12 +93,12 @@ export default class ItalianCar {
   set omega(angularVelocity) {
     this.#omega = angularVelocity;
   }
-  get coins() {
-    return this.#coins;
-  }
-  set coins(num) {
-    this.#coins = num;
-  }
+  // get coins() {
+  //   return this.#coins;
+  // }
+  // set coins(num) {
+  //   this.#coins = num;
+  // }
   set x(posX) {
     this.#x = posX;
   }

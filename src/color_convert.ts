@@ -1,6 +1,6 @@
 
 // https://stackoverflow.com/questions/5623838/rgb-to-hex-and-hex-to-rgb
-//chagne to remove 
+//This function allows us to conver the hex that we get from the html and then converts it to the rgb values we need in teh game
 export default function hexToRgb(hex:string): {r: number, g: number, b: number} | null {
     let  cleanHex = decodeURIComponent(hex);
 

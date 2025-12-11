@@ -99,13 +99,21 @@ export class CollisionSystem {
     FIXME: need better object structure to work properly
     */
   //any for now. later will be changed.
+  /**
+  *@param {ItalianCar} car - the car to check collision for
+  *@param {any} object - the object to check collision against
+  *@returns {boolean} whether the car is colliding
+  */
   static isCollidingCarObject(car: ItalianCar, object: any): boolean {
     let dx = car.x - object.x / 2;
     let dy = car.y - object.y / 2;
     return Math.abs(dx) < car.width && Math.abs(dy) < car.length;
   }
-
-  //creates a projectile object
+/**
+ * 
+ * @param thrower Type Car(or player)
+ * @returns shell to be thrown(another obj)
+ */
   static newshell(thrower: ItalianCar) {
     let shell = thrower;
     shell.maxSpeed = 2 * thrower.maxSpeed;
@@ -117,6 +125,12 @@ export class CollisionSystem {
     return shell;
   }
   //creates a mine object
+  /**
+   * 
+   * @param user User who places mine
+   * @returns mine at location of user
+   * OPTIONAL! Not needed to be implemented
+   */
   static newmine(user: ItalianCar) {
     let mine = user;
     mine.maxSpeed = 0;
@@ -127,8 +141,11 @@ export class CollisionSystem {
     mine.spdmod = 0;
     return mine;
   }
+  //is the collision response betweeen 2
 
-  //applys the collision making it so that we are applying
+
+  //*   @param {ItalianCar} obj1 - first car involved in collision
+  //*   @param {ItalianCar} obj2 - second car (or obj) involved in collision
   static applycollision(obj1: ItalianCar, obj2: ItalianCar) {
     let tempspd = obj1.currentSpeed;
     // let temptheta = obj1.theta;

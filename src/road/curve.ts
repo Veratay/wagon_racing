@@ -2,6 +2,12 @@ import { Vec3 } from "../math";
 
 // https://en.wikipedia.org/wiki/Centripetal_Catmull%E2%80%93Rom_spline
 
+/**
+ * 
+ * @param controlPoints Creates teh different points that are needed to be controlled
+ * @param samplesPerSegment How many samples it takes
+ * @returns what is
+ */
 export function catmullRom(
   controlPoints: Vec3[],
   samplesPerSegment: number,
