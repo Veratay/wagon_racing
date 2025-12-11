@@ -89,25 +89,33 @@ const tickRate = 60;
 const tickDt = 1.0 / tickRate;
 
 function broadcastState() {
-  const snapshot = {
-    type: "state",
-    tick: serverTick++,
-    cars: Object.entries(clients).map(([pid, data]) => ({
-      pid: pid,
-      car: {
-        x: data.car.x,
-        y: data.car.y,
-        theta: data.car.theta,
-        currentSpeed: data.car.currentSpeed,
-        omega: data.car.omega,
-      },
-    })),
-  };
+  for (let gid in games) {
+    
+    const players = Object.entries(clients).filter(([pid,v]) => {
+      return v.game.toString() == gid.toString()
+    })
+    const snapshot = {
+      type: "state",
+      tick: serverTick++,
+      cars: players.map(([pid, data]) => ({
+        pid: pid,
+        car: {
+          x: data.car.x,
+          y: data.car.y,
+          theta: data.car.theta,
+          currentSpeed: data.car.currentSpeed,
+          omega: data.car.omega,
+        },
+      })),
+    };
 
-  const payload = JSON.stringify(snapshot);
+    const payload = JSON.stringify(snapshot);
 
-  for (const ws of wss.clients) {
-    if (ws.readyState === WebSocket.OPEN) ws.send(payload);
+    for (const [pid,player] of players) {
+      if(player.ws) {
+        player.ws.send(payload);
+      }
+    }
   }
 }
 

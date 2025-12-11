@@ -8,7 +8,7 @@ export const DEFAULT_OPTIONS: ProceduralRoadOptions = {
   radiusVariance: 0.35,
   elevationRange: 0,
   width: 6,
-  depth: 0.5,
+  depth: 0.1,
   samplesPerSegment: 24,
   controlPoints: undefined,
   closed: true
