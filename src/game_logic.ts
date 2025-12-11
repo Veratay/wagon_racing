@@ -203,8 +203,6 @@ export default class GameLogic {
 
     const blankInputs = { up: false, down: false, right: false, left: false };
 
-    console.log(this.#otherCars);
-
     for (let other of this.#otherCars.values()) {
       // console.log(other.car.position)
       // console.log(other.car.velocity)
@@ -253,6 +251,9 @@ export default class GameLogic {
           car.theta = v.car.theta;
           car.currentSpeed = v.car.currentSpeed;
           car.omega = v.car.omega;
+          const syncedSpeed = v.car.currentSpeed;
+          car.velocityX = syncedSpeed * Math.cos(car.theta);
+          car.velocityY = syncedSpeed * Math.sin(car.theta);
         } else {
           if (
             Math.abs(this.#car.x - v.car.x) > POS_DESYNC_THRESH ||
@@ -264,6 +265,11 @@ export default class GameLogic {
             this.#car.theta = v.car.theta;
             this.#car.currentSpeed = v.car.currentSpeed;
             this.#car.omega = v.car.omega;
+            const syncedSpeed = v.car.currentSpeed;
+            this.#car.velocityX =
+              syncedSpeed * Math.cos(this.#car.theta);
+            this.#car.velocityY =
+              syncedSpeed * Math.sin(this.#car.theta);
             this.#justResynced = true;
             console.log("resync");
           } else {

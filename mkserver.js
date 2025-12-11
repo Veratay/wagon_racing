@@ -65,6 +65,10 @@ wss.on("connection", (ws) => {
       clients[playerid].car.theta = data.theta;
       clients[playerid].car.currentSpeed = data.currentSpeed;
       clients[playerid].car.omega = data.omega;
+      const vx = data.currentSpeed * Math.cos(data.theta);
+      const vy = data.currentSpeed * Math.sin(data.theta);
+      clients[playerid].car.velocityX = vx;
+      clients[playerid].car.velocityY = vy;
     }
   });
 
@@ -90,10 +94,9 @@ const tickDt = 1.0 / tickRate;
 
 function broadcastState() {
   for (let gid in games) {
-    
-    const players = Object.entries(clients).filter(([pid,v]) => {
-      return v.game.toString() == gid.toString()
-    })
+    const players = Object.entries(clients).filter(([pid, v]) => {
+      return v.game.toString() == gid.toString();
+    });
     const snapshot = {
       type: "state",
       tick: serverTick++,
@@ -111,8 +114,8 @@ function broadcastState() {
 
     const payload = JSON.stringify(snapshot);
 
-    for (const [pid,player] of players) {
-      if(player.ws) {
+    for (const [pid, player] of players) {
+      if (player.ws) {
         player.ws.send(payload);
       }
     }
