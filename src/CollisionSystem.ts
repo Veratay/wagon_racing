@@ -149,9 +149,9 @@ export class CollisionSystem {
   static applycollision(obj1: ItalianCar, obj2: ItalianCar) {
     let tempspd = obj1.currentSpeed;
     // let temptheta = obj1.theta;
-    obj1.currentSpeed = obj2.currentSpeed * obj2.spdmod;
+    // obj1.currentSpeed = obj2.currentSpeed * obj2.spdmod;
     // obj1.theta = obj2.theta;
-    obj2.currentSpeed = tempspd * obj1.spdmod;
+    // obj2.currentSpeed = tempspd * obj1.spdmod;
     obj1.y -= .1*obj1.currentSpeed*Math.sin(obj1.theta);
     obj1.x -= .1*obj1.currentSpeed*Math.cos(obj1.theta);
     obj2.y -= .1*obj2.currentSpeed*Math.sin(obj2.theta);

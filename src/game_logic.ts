@@ -93,13 +93,15 @@ export default class GameLogic {
     const carMesh = new Mesh(this.#renderer.gl, cubePositions, cubeIndices);
     this.#carClass = new UnlitSolidClass(this.#renderer.gl, carMesh);
     this.#carInstance = this.#carClass.createInstance();
-    console.log(hexToRgb(color));
+    // console.log(hexToRgb(color));
     this.#carInstance.color = new Vec3(
       ...Object.values(hexToRgb(color) || new Vec3(0, 1, 1)),
     );
     this.#carInstance.scale = new Vec3(2, 1, 1);
 
     this.#renderer.addRenderClass(this.#carClass);
+
+   
   }
 
   async loadRoad(gid: string): Promise<void> {
@@ -123,6 +125,18 @@ export default class GameLogic {
     this.#car.initialY = this.#road.centerline[0].y;
     this.#car.initialTheta = initialTheta;
     this.#car.resetToInitialPosition();
+    
+    
+    const dummyCar1 = this.#carClass.createInstance();
+    
+    dummyCar1.translation = new Vec3(this.#car.initialX+3, this.#car.initialY+4, 0.5); // x=10, y=5
+    dummyCar1.color = new Vec3(1, 1, 0); 
+    dummyCar1.scale = new Vec3(2, 1, 1);
+
+    const dummyCar2 = this.#carClass.createInstance();
+    dummyCar2.translation = new Vec3(this.#car.initialX+4, this.#car.initialY+15, 0.5); // x=-10, y=15
+    dummyCar2.rotation = new Vec3(0, 0, Math.PI / 4); // 45 degrees rotation
+    dummyCar2.color = new Vec3(1, 1, 0);
 
     // Create road mesh and render class
     const roadMesh = new Mesh(
@@ -147,7 +161,7 @@ export default class GameLogic {
     this.#renderer.start();
 
     this.#pid = (await clientStart(this.#gid, "medium", "red")) as string;
-
+    let instance = this.#carClass.createInstance();
     onSocketMessage(this.handleWebSocketMessage.bind(this));
   }
 

@@ -53,7 +53,11 @@ export function generateRoad(
     width
   };
 }
-
+/**
+ * 
+ * @param opts defines the different options for the road. Rn its const
+ * @returns The different parts of the rode
+ */
 export function generateProceduralRoad(
   opts: ProceduralRoadOptions 
 ): ProceduralRoad {
@@ -78,7 +82,12 @@ export function generateProceduralRoad(
     width: opts.width
   };
 }
-
+/**
+ * 
+ * @param road takes in the road that was generated with the different parts
+ * @param p Vect. 3
+ * @returns 
+ */
 export function collideRoad(
   road: ProceduralRoad,
   p: Vec3
