@@ -20,7 +20,8 @@ import {
   onSocketMessage,
   clientGetRoad,
 } from "./client.js";
-import hexToRgb from "./color_convert.js";
+import hexToRgb from "./color_convert.js";import { CollisionSystem } from "./CollisionSystem.js";
+
 //some form or something to create cars based on user input before joining game
 
 const POS_DESYNC_THRESH = 5;
@@ -195,10 +196,25 @@ export default class GameLogic {
       // console.log(other.car.velocity)
       const nextP = CarPhysics.update(other.car, blankInputs, dt);
       CarPhysics.updatePosition(other.car, nextP);
-
+      
       other.instance.translation = new Vec3(other.car.x, other.car.y, 0.1);
 
       other.instance.rotation = new Vec3(0, 0, other.car.theta);
+      //checks for a collision
+      //if spdmod is 0 it means that it is a shell or mine and should be destroyed
+      //couldn't figure out how to delete is so I settled for teleporting it very far away for now
+
+      //following code is commented out until collision detector is fixed:
+      // if(CollisionSystem.isCollidingCarCar(this.#car, other.car)){
+      //   console.log("collided probs")
+      //   CollisionSystem.applycollision(this.#car, other.car)
+      //   if(other.car.spdmod ==0){
+      //     other.car.x += 999999999999
+      //     other.car.currentSpeed = 0
+      //     other.car.length = 0
+      //     other.car.width = 0
+      //   }
+      // }
     }
   }
 
