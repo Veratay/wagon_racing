@@ -4,9 +4,9 @@
 
 //Const acceperation. Percent of
 const KART_PRESETS = {
-  light: { handling: 2.5, acceleration: 30, maxSpeed: 150 },
-  medium: { handling: 2.0, acceleration: 25, maxSpeed: 160 },
-  heavy: { handling: 1.5, acceleration: 23, maxSpeed: 190 },
+  light: { handling: 0.6, acceleration: 300*3, maxSpeed: 150, mass: 22*3 },
+  medium: { handling: 0.4, acceleration: 250*3, maxSpeed: 160, mass: 20*3 },
+  heavy: { handling: 0.2, acceleration: 230*3, maxSpeed: 190, mass: 32*3 },
 };
 
 export default class ItalianCar {
@@ -20,13 +20,27 @@ export default class ItalianCar {
   #x;
   #y;
   #omega; // angular velocity
+  #velocityX;
+  #velocityY;
+  #frontWheelAngle;
+  #frontWheelAngularVelocity;
+  #rearWheelAngularVelocity;
+  #mass;
   initialX;
   initialY;
   initialTheta;
   width = 1;
   length = 2;
-  // #coins; //def the speedboost
-  #spdmod = 0.9
+  #coins; //def the speedboost
+  #spdmod = 0.9;
+
+  /**
+   * @param {string} color - Body color selected by the player.
+   * @param {string} type - Preset key determining handling stats.
+   * @param {number} [initialX=0] - Initial world X coordinate (m)
+   * @param {number} [initialY=0] - Initial world Y coordinate (m)
+   * @param {number} [initialTheta=0] - Initial heading angle (rad)
+   */
   constructor(color, type, initialX = 0, initialY = 0, initialTheta = 0) {
     this.#color = color;
     if (!KART_PRESETS[type]) {
@@ -43,11 +57,18 @@ export default class ItalianCar {
     this.#omega = 0; // initial angular velocity
     // this.#coins = 0;
     this.#theta = initialTheta; // initial direction angle
+    this.#velocityX = 0;
+    this.#velocityY = 0;
+    this.#frontWheelAngle = 0;
+    this.#frontWheelAngularVelocity = 0;
+    this.#rearWheelAngularVelocity = 0;
+    this.#mass = preset.mass;
     this.initialX = initialX;
     this.initialY = initialY;
     this.initialTheta = initialTheta;
     //theta is in RADIANS!
   }
+
   get x() {
     return this.#x;
   }
@@ -69,8 +90,8 @@ export default class ItalianCar {
   get maxSpeed() {
     return this.#maxSpeed;
   }
-  set maxSpeed(spd){
-    this.#maxSpeed = spd
+  set maxSpeed(spd) {
+    this.#maxSpeed = spd;
   }
   get currentSpeed() {
     return this.#currentSpeed;
@@ -105,17 +126,50 @@ export default class ItalianCar {
   set y(posY) {
     this.#y = posY;
   }
-  set Width(width){
-    this.width = width
+  set Width(width) {
+    this.width = width;
   }
-  set Length(length){
-    this.length = length
+  set Length(length) {
+    this.length = length;
   }
-  set spdmod(nspdm){
-    this.#spdmod=nspdm
+  set spdmod(nspdm) {
+    this.#spdmod = nspdm;
   }
-  get spdmod(){
-    return this.#spdmod
+  get spdmod() {
+    return this.#spdmod;
+  }
+  get mass() {
+    return this.#mass;
+  }
+  get velocityX() {
+    return this.#velocityX;
+  }
+  set velocityX(vx) {
+    this.#velocityX = vx;
+  }
+  get velocityY() {
+    return this.#velocityY;
+  }
+  set velocityY(vy) {
+    this.#velocityY = vy;
+  }
+  get frontWheelAngle() {
+    return this.#frontWheelAngle;
+  }
+  set frontWheelAngle(angle) {
+    this.#frontWheelAngle = angle;
+  }
+  get frontWheelAngularVelocity() {
+    return this.#frontWheelAngularVelocity;
+  }
+  set frontWheelAngularVelocity(v) {
+    this.#frontWheelAngularVelocity = v;
+  }
+  get rearWheelAngularVelocity() {
+    return this.#rearWheelAngularVelocity;
+  }
+  set rearWheelAngularVelocity(v) {
+    this.#rearWheelAngularVelocity = v;
   }
 
   resetToInitialPosition() {
@@ -124,5 +178,10 @@ export default class ItalianCar {
     this.#theta = this.initialTheta;
     this.#currentSpeed = 0;
     this.#omega = 0;
+    this.#velocityX = 0;
+    this.#velocityY = 0;
+    this.#frontWheelAngle = 0;
+    this.#frontWheelAngularVelocity = 0;
+    this.#rearWheelAngularVelocity = 0;
   }
 }
