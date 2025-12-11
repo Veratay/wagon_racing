@@ -1,7 +1,7 @@
 import ItalianCar from "./Car";
 let websocket: WebSocket | null = null;
 let connectionPromise: Promise<void> | null = null;
-
+//establishes a connection
 function establishConnection(): Promise<void> {
   if (websocket && websocket.readyState === WebSocket.OPEN) {
     return Promise.resolve();
@@ -21,6 +21,7 @@ function establishConnection(): Promise<void> {
   }
 }
 
+//sends the car object using the car, game id, and player id
 export async function clientSendCar(gid: string, pid: string, car: ItalianCar) {
   await establishConnection();
   if (!websocket || websocket.readyState !== WebSocket.OPEN) {

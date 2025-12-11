@@ -42,6 +42,7 @@ export default class CarPhysics {
     return this.predictNextPosition(car, dt);
   }
 
+  //updates the position of a provided car object with the next move
   static updatePosition(car: ItalianCar, nextMove: { x: number; y: number }) {
     car.x = nextMove.x;
     car.y = nextMove.y;
