@@ -202,15 +202,16 @@ export default class ItalianCar {
   set frontWheelAngularVelocity(v) {
     this.#frontWheelAngularVelocity = v;
   }
-  //returns the anglular velocity of the cars front wheels
+  //returns the anglular velocity of the cars rear wheels
   get rearWheelAngularVelocity() {
     return this.#rearWheelAngularVelocity;
   }
-  //sets the anglular of the cars front wheels using an integer
+  //sets the anglular of the cars rear wheels using an integer
   set rearWheelAngularVelocity(v) {
     this.#rearWheelAngularVelocity = v;
   }
 
+  //resets the cars values to what they should be at the start
   resetToInitialPosition() {
     this.#x = this.initialX;
     this.#y = this.initialY;
