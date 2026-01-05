@@ -5,7 +5,7 @@ A fast-paced, browser-based multiplayer racing game inspired by kart racers. Rac
 Technical Description
 Built with a custom WebGL2 renderer, Node.js multiplayer server, and client-side prediction using velocity/acceleration interpolation. Features real-time networking, custom tire physics, and live-service style state updates.
 
-### Gameplay
+## Gameplay
 Images shows track with obstacles and multiple players connected. Note: Red denotes user, yellow denotes obstacles, and blue denotes other players
 <figure>
 <img width="2661" height="1404" alt="image" src="https://github.com/user-attachments/assets/67d46be6-c8c7-4321-a952-b0d6348e90fe" />
