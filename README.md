@@ -1,3 +1,27 @@
+# Wagon Racing
+##Description
+
+
+## User Guide
+
+# User Page
+<img width="1506" height="1331" alt="image" src="https://github.com/user-attachments/assets/e21089fd-30bc-479e-a2d6-9b1c2086ac0d" />
+
+
+###Gameplay
+
+<figure>
+<img width="2661" height="1404" alt="image" src="https://github.com/user-attachments/assets/67d46be6-c8c7-4321-a952-b0d6348e90fe" />
+</figure>
+
+<figure>
+<img width="633" height="377" alt="image" src="https://github.com/user-attachments/assets/4753a958-70de-45bf-a843-5e0ebee2dc09" />
+<figcaption>Image shows track with obstacles and multiple players connected</figcaption>
+</figure>
+
+
+
+
 SOIUGNSOGIN
 * Get /wagon_race - opens the intro page of the website
 * Get /wagon_race/events - set up a SSE stream for push updates. Each update is a JSON-encoded string of gameid and action 
