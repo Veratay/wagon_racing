@@ -14,9 +14,10 @@ Images shows track with obstacles and multiple players connected. Note: Red deno
 ## User Guide
 https://docs.google.com/document/d/1DYFMfiO62beaZ5C4Z15Sypa_gIaYngtBufhupBiJeaM/edit?usp=sharing
 
-# User Page
+## User Page
 <img width="1506" height="1331" alt="image" src="https://github.com/user-attachments/assets/e21089fd-30bc-479e-a2d6-9b1c2086ac0d" />
-SOIUGNSOGIN
+
+## Api Routes
 * Get /wagon_race - opens the intro page of the website
 * Get /wagon_race/events - set up a SSE stream for push updates. Each update is a JSON-encoded string of gameid and action 
 * Get /wagon_race/game - returns info about the current game using url encoded data
