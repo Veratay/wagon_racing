@@ -1,8 +1,8 @@
 # Wagon Racing
-User Description (for players)
+User Description (for players):
 A fast-paced, browser-based multiplayer racing game inspired by kart racers. Race friends in real time, dodge obstacles, hit speed boosts, and enjoy smooth online gameplay—no downloads required.
 
-Technical Description
+Technical Description:
 Built with a custom WebGL2 renderer, Node.js multiplayer server, and client-side prediction using velocity/acceleration interpolation. Features real-time networking, custom tire physics, and live-service style state updates.
 
 ## Gameplay
